@@ -80,3 +80,4 @@ export const generateReferenceNumber = async (tx, reservationDate) => {
 
   return `${datePrefix}${String(nextSequence).padStart(4, '0')}`;
 };
+

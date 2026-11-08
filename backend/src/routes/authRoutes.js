@@ -14,3 +14,4 @@ router.get('/me', authenticateToken, getMe);
 router.put('/profile', authenticateToken, updateProfile);
 
 export default router;
+

@@ -154,3 +154,4 @@ export const BranchDetailPage = () => {
 };
 
 export default BranchDetailPage;
+

@@ -59,3 +59,4 @@ export const loginValidator = [
     .notEmpty().withMessage('Password is required.'),
   handleValidationErrors,
 ];
+

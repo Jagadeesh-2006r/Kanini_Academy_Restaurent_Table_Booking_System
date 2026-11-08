@@ -192,3 +192,4 @@ export const getAllStaff = async (req, res, next) => {
     next(error);
   }
 };
+

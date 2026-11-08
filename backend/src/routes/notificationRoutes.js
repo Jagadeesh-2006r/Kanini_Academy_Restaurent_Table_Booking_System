@@ -13,3 +13,4 @@ router.get('/', getUserNotifications);
 router.patch('/:id/read', markNotificationRead);
 
 export default router;
+

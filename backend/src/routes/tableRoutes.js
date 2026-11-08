@@ -19,3 +19,4 @@ router.put('/:id', authenticateToken, requireRole('ADMIN'), updateTable);
 router.delete('/:id', authenticateToken, requireRole('ADMIN'), deleteTable);
 
 export default router;
+

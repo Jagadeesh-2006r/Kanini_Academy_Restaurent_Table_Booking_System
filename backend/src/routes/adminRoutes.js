@@ -16,3 +16,4 @@ router.get('/dashboard', getAdminDashboard);
 router.get('/reports', getAdminReports);
 
 export default router;
+

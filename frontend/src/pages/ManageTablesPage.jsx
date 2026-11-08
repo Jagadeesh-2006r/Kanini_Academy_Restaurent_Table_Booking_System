@@ -335,3 +335,4 @@ export const ManageTablesPage = () => {
 };
 
 export default ManageTablesPage;
+

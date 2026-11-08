@@ -132,3 +132,4 @@ export const downloadReservationPDF = (reservation) => {
   // Save the PDF with clean filename
   doc.save(`${reservation.referenceNumber}_Confirmation.pdf`);
 };
+

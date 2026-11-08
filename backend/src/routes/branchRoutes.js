@@ -21,3 +21,4 @@ router.put('/:id', authenticateToken, requireRole('ADMIN'), updateBranch);
 router.patch('/:id/deactivate', authenticateToken, requireRole('ADMIN'), toggleBranchStatus);
 
 export default router;
+

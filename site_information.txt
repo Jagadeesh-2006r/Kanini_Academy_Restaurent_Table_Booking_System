@@ -1,0 +1,7 @@
+🎉 Database seeding completed successfully!
+--------------------------------------------------
+Sample Credentials:
+Admin:    admin@restaurant.com           / Admin@123
+Staff 1:  staff.downtown@restaurant.com   / Staff@123
+Staff 2:  staff.seaside@restaurant.com    / Staff@123
+Customer: customer@example.com           / Customer@123

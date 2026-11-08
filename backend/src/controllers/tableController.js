@@ -206,3 +206,4 @@ export const deleteTable = async (req, res, next) => {
     next(error);
   }
 };
+

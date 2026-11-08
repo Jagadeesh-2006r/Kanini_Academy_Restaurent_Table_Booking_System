@@ -280,3 +280,4 @@ export const ManageBranchesPage = () => {
 };
 
 export default ManageBranchesPage;
+

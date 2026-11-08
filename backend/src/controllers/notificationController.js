@@ -69,3 +69,4 @@ export const markNotificationRead = async (req, res, next) => {
     next(error);
   }
 };
+

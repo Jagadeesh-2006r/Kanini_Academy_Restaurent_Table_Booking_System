@@ -460,3 +460,4 @@ When presenting to your college jury, follow this demonstration flow:
    - Navigate to **Manage Tables**: Configure indoor/outdoor capacities.
    - Navigate to **Manage Staff**: Create and assign a staff member to a branch.
    - Navigate to **Analytics & Reports**: Show reservation status breakdown and date timelines.
+

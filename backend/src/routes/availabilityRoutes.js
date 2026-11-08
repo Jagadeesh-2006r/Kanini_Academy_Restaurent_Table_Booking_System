@@ -7,3 +7,4 @@ const router = Router();
 router.get('/', checkAvailability);
 
 export default router;
+

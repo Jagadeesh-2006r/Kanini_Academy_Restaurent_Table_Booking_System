@@ -55,3 +55,4 @@ If granted an extended development cycle, the following enhancements would be pr
    - Implement background worker jobs to automatically transition status from `BOOKED` to `NO_SHOW` if a guest has not checked in within 20 minutes of their slot start time, instantly freeing the table for walk-ins.
 4. **Third-Party Calendar Integration:**
    - Add `.ics` calendar sync (Google Calendar / Apple iCal) upon reservation confirmation.
+

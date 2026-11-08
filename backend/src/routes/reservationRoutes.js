@@ -20,3 +20,4 @@ router.put('/:id', modifyReservation);
 router.patch('/:id/cancel', cancelReservation);
 
 export default router;
+
