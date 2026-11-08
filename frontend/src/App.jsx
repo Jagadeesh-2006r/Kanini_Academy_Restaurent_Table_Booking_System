@@ -1,102 +1,173 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
+import ProtectedRoute from './components/ProtectedRoute';
+
+// Public Pages
+import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
+import BranchListPage from './pages/BranchListPage';
+import BranchDetailPage from './pages/BranchDetailPage';
+import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+import ProfilePage from './pages/ProfilePage';
+
+// Customer Pages
+import CustomerDashboard from './pages/CustomerDashboard';
+import NewReservationPage from './pages/NewReservationPage';
+import MyReservationsPage from './pages/MyReservationsPage';
+import ReservationConfirmationPage from './pages/ReservationConfirmationPage';
+
+// Staff Pages
+import StaffDashboard from './pages/StaffDashboard';
+import StaffTodayPage from './pages/StaffTodayPage';
+
+// Admin Pages
+import AdminDashboard from './pages/AdminDashboard';
+import ManageBranchesPage from './pages/ManageBranchesPage';
+import ManageTablesPage from './pages/ManageTablesPage';
+import ManageStaffPage from './pages/ManageStaffPage';
+import AllReservationsPage from './pages/AllReservationsPage';
+import ReportsPage from './pages/ReportsPage';
 
 function App() {
-  const [health, setHealth] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    axios.get('/api/health')
-      .then(res => {
-        setHealth(res.data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('API health check error:', err);
-        setLoading(false);
-      });
-  }, []);
-
   return (
-    <div className="d-flex flex-column min-vh-100">
-      {/* Navbar */}
-      <nav className="navbar navbar-expand-lg navbar-custom">
-        <div className="container">
-          <a className="navbar-brand fw-bold" href="/">
-            <i className="bi bi-cup-hot-fill text-warning me-2"></i>
-            SAVORIA <span>BISTRO</span>
-          </a>
-          <div className="ms-auto text-light small d-none d-md-block">
-            <span className="badge bg-success me-2">● Online</span>
-            Table Reservation System
-          </div>
-        </div>
-      </nav>
+    <AuthProvider>
+      <div className="d-flex flex-column min-vh-100">
+        <Navbar />
 
-      {/* Hero Section */}
-      <div className="container my-auto py-5 text-center">
-        <div className="row justify-content-center">
-          <div className="col-lg-8">
-            <span className="badge rounded-pill bg-warning text-dark px-3 py-2 mb-3 fw-semibold">
-              <i className="bi bi-stars me-1"></i> Stage 1: Setup & Database Complete
-            </span>
-            <h1 className="display-4 fw-bold mb-3">
-              Fine Dining Meets Seamless Reservations
-            </h1>
-            <p className="lead text-muted mb-4">
-              Welcome to the full-stack Restaurant Table Reservation System. Experience smart table allocation, real-time availability, and multi-role dashboards for Customers, Staff, and Administrators.
-            </p>
+        <main className="flex-grow-1">
+          <Routes>
+            {/* Public Routes */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/branches" element={<BranchListPage />} />
+            <Route path="/branches/:id" element={<BranchDetailPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
 
-            <div className="card custom-card p-4 mx-auto text-start shadow-sm mb-4" style={{ maxWidth: '600px' }}>
-              <h5 className="fw-bold mb-3 border-bottom pb-2">
-                <i className="bi bi-check2-circle text-success me-2"></i>
-                Backend & Database Status
-              </h5>
-              <div className="row g-2">
-                <div className="col-sm-6">
-                  <div className="p-2 border rounded bg-light small">
-                    <strong>Frontend:</strong> React 18 + Vite + Bootstrap 5
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="p-2 border rounded bg-light small">
-                    <strong>Backend:</strong> Node.js + Express REST API
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="p-2 border rounded bg-light small">
-                    <strong>Database:</strong> PostgreSQL 18 + Prisma ORM
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="p-2 border rounded bg-light small">
-                    <strong>API Status:</strong> {loading ? 'Checking...' : health?.status === 'ok' ? 'Connected (200 OK)' : 'Offline'}
-                  </div>
-                </div>
-              </div>
-            </div>
+            {/* Common Authenticated Routes */}
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute allowedRoles={['CUSTOMER', 'STAFF', 'ADMIN']}>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
 
-            <div className="d-flex justify-content-center gap-3">
-              <button className="btn btn-gold px-4 py-2">
-                <i className="bi bi-calendar2-check me-2"></i> Explore Branches
-              </button>
-              <button className="btn btn-outline-gold px-4 py-2">
-                <i className="bi bi-shield-lock me-2"></i> Sign In
-              </button>
-            </div>
-          </div>
-        </div>
+            {/* Customer Protected Routes */}
+            <Route
+              path="/customer/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={['CUSTOMER', 'ADMIN']}>
+                  <CustomerDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/reservations/new"
+              element={
+                <ProtectedRoute allowedRoles={['CUSTOMER', 'ADMIN']}>
+                  <NewReservationPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/reservations/my"
+              element={
+                <ProtectedRoute allowedRoles={['CUSTOMER', 'ADMIN']}>
+                  <MyReservationsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/reservations/confirmation/:id"
+              element={
+                <ProtectedRoute allowedRoles={['CUSTOMER', 'STAFF', 'ADMIN']}>
+                  <ReservationConfirmationPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Staff Protected Routes */}
+            <Route
+              path="/staff/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={['STAFF', 'ADMIN']}>
+                  <StaffDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/staff/today"
+              element={
+                <ProtectedRoute allowedRoles={['STAFF', 'ADMIN']}>
+                  <StaffTodayPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Admin Protected Routes */}
+            <Route
+              path="/admin/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <AdminDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/branches"
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <ManageBranchesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/tables"
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <ManageTablesPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/staff"
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <ManageStaffPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/reservations"
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <AllReservationsPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/reports"
+              element={
+                <ProtectedRoute allowedRoles={['ADMIN']}>
+                  <ReportsPage />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Fallback Catch-all Route */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </main>
+
+        <Footer />
       </div>
-
-      {/* Footer */}
-      <footer className="footer-custom py-3 text-center small">
-        <div className="container">
-          <p className="mb-0">
-            &copy; {new Date().getFullYear()} Savoria Restaurant Table Reservation System. Built with React, Node.js, Express & PostgreSQL.
-          </p>
-        </div>
-      </footer>
-    </div>
+    </AuthProvider>
   );
 }
 

@@ -1,0 +1,262 @@
+{
+  "info": {
+    "name": "Restaurant Table Reservation System API",
+    "_postman_id": "c1f7a840-7e61-464e-b56f-restaurant-api",
+    "description": "Comprehensive Postman Collection for testing all Customer, Staff, and Admin REST API endpoints in the Restaurant Table Reservation System.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "customerToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "staffToken",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication",
+      "item": [
+        {
+          "name": "Register Customer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Johnson\",\n  \"email\": \"customer@example.com\",\n  \"phone\": \"+1 555-0199\",\n  \"password\": \"Customer@123\",\n  \"confirmPassword\": \"Customer@123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] }
+          }
+        },
+        {
+          "name": "Login - Customer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"customer@example.com\",\n  \"password\": \"Customer@123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Login - Staff",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"staff.downtown@restaurant.com\",\n  \"password\": \"Staff@123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Login - Admin",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@restaurant.com\",\n  \"password\": \"Admin@123\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Get Authenticated Profile (Me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Branches",
+      "item": [
+        {
+          "name": "Get All Active Branches",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/branches", "host": ["{{baseUrl}}"], "path": ["branches"] }
+          }
+        },
+        {
+          "name": "Get Branch by ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/branches/1", "host": ["{{baseUrl}}"], "path": ["branches", "1"] }
+          }
+        },
+        {
+          "name": "Create Branch (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"branchName\": \"Uptown Botanical Lounge\",\n  \"address\": \"720 Highland Ave, Uptown Arts Quarter\",\n  \"openingTime\": \"12:00\",\n  \"closingTime\": \"23:00\",\n  \"slotLength\": 90\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/branches", "host": ["{{baseUrl}}"], "path": ["branches"] }
+          }
+        },
+        {
+          "name": "Toggle Branch Status (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/branches/1/deactivate", "host": ["{{baseUrl}}"], "path": ["branches", "1", "deactivate"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Tables",
+      "item": [
+        {
+          "name": "Get Tables by Branch ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/tables/1", "host": ["{{baseUrl}}"], "path": ["tables", "1"] }
+          }
+        },
+        {
+          "name": "Create Table (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{adminToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"branchId\": 1,\n  \"tableNumber\": \"DT-06\",\n  \"seatingArea\": \"OUTDOOR\",\n  \"capacity\": 6\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/tables", "host": ["{{baseUrl}}"], "path": ["tables"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Availability & Table Allocation",
+      "item": [
+        {
+          "name": "Check Slot Availability",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/availability?branchId=1&date=2026-11-10&partySize=4&seatingArea=INDOOR",
+              "host": ["{{baseUrl}}"],
+              "path": ["availability"],
+              "query": [
+                { "key": "branchId", "value": "1" },
+                { "key": "date", "value": "2026-11-10" },
+                { "key": "partySize", "value": "4" },
+                { "key": "seatingArea", "value": "INDOOR" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Reservations",
+      "item": [
+        {
+          "name": "Create Reservation (Auto Table Allocation)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{customerToken}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"branchId\": 1,\n  \"reservationDate\": \"2026-11-10\",\n  \"startTime\": \"18:30\",\n  \"partySize\": 4,\n  \"seatingArea\": \"INDOOR\",\n  \"specialRequest\": \"Celebrating birthday, window booth\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/reservations", "host": ["{{baseUrl}}"], "path": ["reservations"] }
+          }
+        },
+        {
+          "name": "Get My Reservations (Customer)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/reservations/my", "host": ["{{baseUrl}}"], "path": ["reservations", "my"] }
+          }
+        },
+        {
+          "name": "Cancel Reservation",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customerToken}}" }],
+            "url": { "raw": "{{baseUrl}}/reservations/1/cancel", "host": ["{{baseUrl}}"], "path": ["reservations", "1", "cancel"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Staff Operations",
+      "item": [
+        {
+          "name": "Get Staff Assigned Branch Reservations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{staffToken}}" }],
+            "url": { "raw": "{{baseUrl}}/staff/reservations?view=today", "host": ["{{baseUrl}}"], "path": ["staff", "reservations"], "query": [{ "key": "view", "value": "today" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Admin Operations",
+      "item": [
+        {
+          "name": "Admin Dashboard Metrics",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/dashboard", "host": ["{{baseUrl}}"], "path": ["admin", "dashboard"] }
+          }
+        },
+        {
+          "name": "Admin Analytical Reports",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/reports", "host": ["{{baseUrl}}"], "path": ["admin", "reports"] }
+          }
+        },
+        {
+          "name": "Admin View All Reservations",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/reservations", "host": ["{{baseUrl}}"], "path": ["admin", "reservations"] }
+          }
+        }
+      ]
+    }
+  ]
+}
