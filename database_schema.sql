@@ -132,3 +132,4 @@ ALTER TABLE "notifications" ADD CONSTRAINT "notifications_reservationId_fkey"
 
 ALTER TABLE "reservation_audit_logs" ADD CONSTRAINT "reservation_audit_logs_reservationId_fkey" 
     FOREIGN KEY ("reservationId") REFERENCES "reservations"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
