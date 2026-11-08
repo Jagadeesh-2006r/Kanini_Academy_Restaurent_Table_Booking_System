@@ -188,35 +188,57 @@ export const createReservation = async (req, res, next) => {
       }
 
       // 8. Generate unique reservation reference: RES-YYYYMMDD-0001
-      const referenceNumber = await generateReferenceNumber(tx, targetDate);
+      let referenceNumber = await generateReferenceNumber(tx, targetDate);
 
-      // 9. Save reservation
-      const created = await tx.reservation.create({
-        data: {
-          referenceNumber,
-          customerId,
-          branchId: bId,
-          tableId: allocatedTable.id,
-          reservationDate: targetDate,
-          startTime,
-          endTime,
-          partySize: size,
-          specialRequest: specialRequest ? specialRequest.trim() : null,
-          status: 'BOOKED',
-        },
-        include: {
-          branch: true,
-          table: true,
-          customer: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              phone: true,
+      // 9. Save reservation with collision protection for concurrent requests
+      let created = null;
+      for (let attempt = 0; attempt < 5; attempt++) {
+        try {
+          created = await tx.reservation.create({
+            data: {
+              referenceNumber,
+              customerId,
+              branchId: bId,
+              tableId: allocatedTable.id,
+              reservationDate: targetDate,
+              startTime,
+              endTime,
+              partySize: size,
+              specialRequest: specialRequest ? specialRequest.trim() : null,
+              status: 'BOOKED',
             },
-          },
-        },
-      });
+            include: {
+              branch: true,
+              table: true,
+              customer: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  phone: true,
+                },
+              },
+            },
+          });
+          break; // successfully saved
+        } catch (insertErr) {
+          if (insertErr.code === 'P2002' && insertErr.meta?.target?.includes('referenceNumber')) {
+            const parts = referenceNumber.split('-');
+            const nextSeq = (parseInt(parts[2], 10) || 1) + 1;
+            referenceNumber = `${parts[0]}-${parts[1]}-${String(nextSeq).padStart(4, '0')}`;
+          } else {
+            throw insertErr;
+          }
+        }
+      }
+
+      if (!created) {
+        throw {
+          statusCode: 500,
+          errorCode: 'CREATION_FAILED',
+          message: 'Failed to generate unique reservation reference after multiple attempts.',
+        };
+      }
 
       // 10. Create Notification for the customer
       await tx.notification.create({
@@ -652,3 +674,4 @@ export const cancelReservation = async (req, res, next) => {
     next(error);
   }
 };
+

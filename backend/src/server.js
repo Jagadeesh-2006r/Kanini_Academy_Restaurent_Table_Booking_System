@@ -26,6 +26,14 @@ async function startServer() {
     process.on('SIGINT', () => shutdown('SIGINT'));
     process.on('SIGTERM', () => shutdown('SIGTERM'));
 
+    process.on('unhandledRejection', (reason, promise) => {
+      console.error('⚠️ Unhandled Rejection at:', promise, 'reason:', reason);
+    });
+
+    process.on('uncaughtException', (err) => {
+      console.error('⚠️ Uncaught Exception:', err);
+    });
+
   } catch (error) {
     console.error('❌ Failed to start server:', error);
     await prisma.$disconnect();
@@ -34,3 +42,4 @@ async function startServer() {
 }
 
 startServer();
+
