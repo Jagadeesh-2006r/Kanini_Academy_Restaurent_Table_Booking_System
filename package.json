@@ -1,0 +1,22 @@
+{
+  "name": "restaurant-table-reservation-system",
+  "version": "1.0.0",
+  "description": "Full-Stack Restaurant Table Reservation System with React, Node.js, Express & PostgreSQL",
+  "scripts": {
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev",
+    "seed": "npm --prefix backend run seed",
+    "prisma:push": "npm --prefix backend run prisma:push",
+    "build:frontend": "npm --prefix frontend run build"
+  },
+  "keywords": [
+    "restaurant",
+    "table-reservation",
+    "react",
+    "express",
+    "postgresql",
+    "prisma"
+  ],
+  "author": "",
+  "license": "ISC"
+}

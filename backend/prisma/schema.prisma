@@ -1,0 +1,144 @@
+// Prisma Schema for Restaurant Table Reservation System
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  CUSTOMER
+  STAFF
+  ADMIN
+}
+
+enum SeatingArea {
+  INDOOR
+  OUTDOOR
+}
+
+enum ReservationStatus {
+  BOOKED
+  CANCELLED
+  COMPLETED
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  name          String
+  email         String         @unique
+  phone         String
+  password      String
+  role          Role           @default(CUSTOMER)
+  branchId      Int?
+  active        Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // Relations
+  branch        Branch?        @relation("BranchStaff", fields: [branchId], references: [id], onDelete: SetNull)
+  reservations  Reservation[]  @relation("CustomerReservations")
+  notifications Notification[]
+
+  @@map("users")
+}
+
+model Branch {
+  id           Int               @id @default(autoincrement())
+  branchName   String
+  address      String
+  openingTime  String            // Format: "HH:mm" (e.g. "11:00")
+  closingTime  String            // Format: "HH:mm" (e.g. "23:00")
+  slotLength   Int               @default(90) // In minutes
+  active       Boolean           @default(true)
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+
+  // Relations
+  tables       RestaurantTable[]
+  reservations Reservation[]
+  staff        User[]            @relation("BranchStaff")
+
+  @@map("branches")
+}
+
+model RestaurantTable {
+  id           Int           @id @default(autoincrement())
+  branchId     Int
+  tableNumber  String
+  seatingArea  SeatingArea   @default(INDOOR)
+  capacity     Int
+  active       Boolean       @default(true)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  // Relations
+  branch       Branch        @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  reservations Reservation[]
+
+  @@unique([branchId, tableNumber])
+  @@map("restaurant_tables")
+}
+
+model Reservation {
+  id              Int                   @id @default(autoincrement())
+  referenceNumber String                @unique
+  customerId      Int
+  branchId        Int
+  tableId         Int
+  reservationDate DateTime              @db.Date
+  startTime       String                // e.g. "18:00"
+  endTime         String                // e.g. "19:30"
+  partySize       Int
+  specialRequest  String?               @db.Text
+  status          ReservationStatus     @default(BOOKED)
+  createdAt       DateTime              @default(now())
+  updatedAt       DateTime              @updatedAt
+
+  // Relations
+  customer        User                  @relation("CustomerReservations", fields: [customerId], references: [id], onDelete: Cascade)
+  branch          Branch                @relation(fields: [branchId], references: [id], onDelete: Cascade)
+  table           RestaurantTable       @relation(fields: [tableId], references: [id], onDelete: Restrict)
+  notifications   Notification[]
+  auditLogs       ReservationAuditLog[]
+
+  @@index([branchId, reservationDate, status])
+  @@index([tableId, reservationDate, status])
+  @@index([customerId, reservationDate])
+  @@map("reservations")
+}
+
+model Notification {
+  id            Int          @id @default(autoincrement())
+  userId        Int
+  reservationId Int?
+  message       String       @db.Text
+  isRead        Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+
+  // Relations
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reservation   Reservation? @relation(fields: [reservationId], references: [id], onDelete: SetNull)
+
+  @@index([userId, isRead])
+  @@map("notifications")
+}
+
+model ReservationAuditLog {
+  id            Int         @id @default(autoincrement())
+  reservationId Int
+  action        String      // e.g. "CREATED", "CANCELLED", "MODIFIED"
+  oldValue      String?     @db.Text
+  newValue      String?     @db.Text
+  createdAt     DateTime    @default(now())
+
+  // Relations
+  reservation   Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  @@index([reservationId])
+  @@map("reservation_audit_logs")
+}
+

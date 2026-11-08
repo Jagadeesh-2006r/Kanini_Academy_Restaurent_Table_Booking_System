@@ -1,0 +1,149 @@
+/* Custom Styling for Savoria Restaurant Table Reservation System */
+
+:root {
+  --primary-gold: #c28833;
+  --primary-gold-hover: #a97325;
+  --primary-gold-light: #fef8ee;
+  --dark-charcoal: #18191c;
+  --card-bg: #ffffff;
+  --surface-bg: #f8fafc;
+  --text-primary: #1e293b;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --accent-orange: #e06d2a;
+}
+
+body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text-primary);
+  background-color: var(--surface-bg);
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3, .font-serif, .navbar-brand {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Custom Primary Buttons */
+.btn-gold {
+  background: linear-gradient(135deg, #c28833 0%, #d49a45 100%);
+  color: #ffffff !important;
+  font-weight: 500;
+  border: none;
+  border-radius: 8px;
+  padding: 0.6rem 1.4rem;
+  transition: all 0.25s ease-in-out;
+  box-shadow: 0 2px 6px rgba(194, 136, 51, 0.25);
+}
+
+.btn-gold:hover {
+  background: linear-gradient(135deg, #ad782c 0%, #be8638 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(194, 136, 51, 0.35);
+}
+
+.btn-outline-gold {
+  border: 1.5px solid var(--primary-gold);
+  color: var(--primary-gold) !important;
+  font-weight: 500;
+  border-radius: 8px;
+  padding: 0.55rem 1.35rem;
+  background: transparent;
+  transition: all 0.25s ease;
+}
+
+.btn-outline-gold:hover {
+  background-color: var(--primary-gold);
+  color: #ffffff !important;
+  transform: translateY(-1px);
+}
+
+/* Navigation */
+.navbar-custom {
+  background-color: var(--dark-charcoal);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-bottom: 1px solid rgba(194, 136, 51, 0.25);
+  padding: 0.85rem 0;
+}
+
+.navbar-custom .navbar-brand {
+  font-size: 1.6rem;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+}
+
+.navbar-custom .navbar-brand span {
+  color: #d49a45;
+}
+
+.navbar-custom .nav-link {
+  color: #cbd5e1;
+  font-weight: 400;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  transition: color 0.2s;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+  color: #d49a45;
+}
+
+/* Rounded Cards */
+.custom-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.custom-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+/* Badge styling */
+.badge-indoor {
+  background-color: #e0f2fe;
+  color: #0369a1;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 0.35rem 0.65rem;
+}
+
+.badge-outdoor {
+  background-color: #fef3c7;
+  color: #92400e;
+  font-weight: 500;
+  border-radius: 6px;
+  padding: 0.35rem 0.65rem;
+}
+
+.badge-status-booked {
+  background-color: #dcfce7;
+  color: #166534;
+  font-weight: 600;
+}
+
+.badge-status-cancelled {
+  background-color: #fee2e2;
+  color: #991b1b;
+  font-weight: 600;
+}
+
+.badge-status-completed {
+  background-color: #e2e8f0;
+  color: #334155;
+  font-weight: 600;
+}
+
+/* Footer */
+.footer-custom {
+  background-color: var(--dark-charcoal);
+  color: #94a3b8;
+  margin-top: auto;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
